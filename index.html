@@ -1,12 +1,1233 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
+
 <head>
-    <title>My First Webpage</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Jitendra Kumar — Android Developer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+
+<style>
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+
+  :root {
+
+    --bg: #0a0a0f;
+
+    --surface: #111118;
+
+    --card: #16161f;
+
+    --accent: #00e5a0;
+
+    --accent2: #0077ff;
+
+    --muted: #4a4a6a;
+
+    --text: #e8e8f0;
+
+    --text-dim: #8888aa;
+
+  }
+
+
+  html { scroll-behavior: smooth; }
+
+
+  body {
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    font-family: 'Syne', sans-serif;
+
+    overflow-x: hidden;
+
+    cursor: none;
+
+  }
+
+
+  /* Custom cursor */
+
+  .cursor {
+
+    width: 12px; height: 12px;
+
+    background: var(--accent);
+
+    border-radius: 50%;
+
+    position: fixed; top: 0; left: 0;
+
+    pointer-events: none; z-index: 9999;
+
+    transition: transform 0.15s ease;
+
+    mix-blend-mode: exclusion;
+
+  }
+
+  .cursor-ring {
+
+    width: 36px; height: 36px;
+
+    border: 1px solid var(--accent);
+
+    border-radius: 50%;
+
+    position: fixed; top: 0; left: 0;
+
+    pointer-events: none; z-index: 9998;
+
+    transition: transform 0.4s ease, opacity 0.3s;
+
+    opacity: 0.5;
+
+    mix-blend-mode: exclusion;
+
+  }
+
+
+  /* Noise overlay */
+
+  body::before {
+
+    content: '';
+
+    position: fixed; inset: 0;
+
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+
+    pointer-events: none; z-index: 1000; opacity: 0.4;
+
+  }
+
+
+  /* NAV */
+
+  nav {
+
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+
+    display: flex; justify-content: space-between; align-items: center;
+
+    padding: 24px 60px;
+
+    background: linear-gradient(to bottom, rgba(10,10,15,0.95) 0%, transparent 100%);
+
+    backdrop-filter: blur(4px);
+
+  }
+
+  .nav-logo {
+
+    font-size: 1.1rem; font-weight: 800; letter-spacing: 0.1em;
+
+    color: var(--accent); text-transform: uppercase;
+
+  }
+
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+
+  .nav-links a {
+
+    color: var(--text-dim); text-decoration: none; font-size: 0.85rem;
+
+    letter-spacing: 0.08em; text-transform: uppercase;
+
+    transition: color 0.2s;
+
+    font-family: 'DM Mono', monospace;
+
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+
+  /* HERO */
+
+  #hero {
+
+    min-height: 100vh;
+
+    display: flex; align-items: center;
+
+    padding: 120px 60px 60px;
+
+    position: relative; overflow: hidden;
+
+  }
+
+  .hero-grid {
+
+    position: absolute; inset: 0;
+
+    background-image:
+
+      linear-gradient(rgba(0,229,160,0.04) 1px, transparent 1px),
+
+      linear-gradient(90deg, rgba(0,229,160,0.04) 1px, transparent 1px);
+
+    background-size: 60px 60px;
+
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 70%);
+
+  }
+
+  .hero-glow {
+
+    position: absolute; top: 20%; right: 10%;
+
+    width: 500px; height: 500px;
+
+    background: radial-gradient(circle, rgba(0,119,255,0.12) 0%, transparent 70%);
+
+    border-radius: 50%; pointer-events: none;
+
+  }
+
+  .hero-glow2 {
+
+    position: absolute; bottom: 10%; left: 5%;
+
+    width: 400px; height: 400px;
+
+    background: radial-gradient(circle, rgba(0,229,160,0.08) 0%, transparent 70%);
+
+    border-radius: 50%; pointer-events: none;
+
+  }
+
+  .hero-content { position: relative; max-width: 900px; }
+
+  .hero-tag {
+
+    display: inline-flex; align-items: center; gap: 8px;
+
+    background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.2);
+
+    border-radius: 999px; padding: 6px 16px;
+
+    font-family: 'DM Mono', monospace; font-size: 0.75rem;
+
+    color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+
+    margin-bottom: 32px;
+
+    animation: fadeSlideUp 0.8s ease both;
+
+  }
+
+  .hero-tag::before {
+
+    content: ''; width: 6px; height: 6px;
+
+    background: var(--accent); border-radius: 50%;
+
+    animation: pulse 2s infinite;
+
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.5)} }
+
+
+  .hero-name {
+
+    font-size: clamp(3.5rem, 9vw, 8rem);
+
+    font-weight: 800; line-height: 0.95;
+
+    letter-spacing: -0.03em;
+
+    animation: fadeSlideUp 0.8s 0.1s ease both;
+
+  }
+
+  .hero-name span { color: var(--accent); display: block; }
+
+  .hero-sub {
+
+    margin-top: 24px;
+
+    font-family: 'DM Mono', monospace; font-size: 1rem;
+
+    color: var(--text-dim); line-height: 1.6; max-width: 560px;
+
+    animation: fadeSlideUp 0.8s 0.2s ease both;
+
+  }
+
+  .hero-actions {
+
+    margin-top: 48px; display: flex; gap: 16px; flex-wrap: wrap;
+
+    animation: fadeSlideUp 0.8s 0.3s ease both;
+
+  }
+
+  .btn-primary {
+
+    background: var(--accent); color: #0a0a0f;
+
+    border: none; padding: 14px 32px;
+
+    font-family: 'Syne', sans-serif; font-weight: 700;
+
+    font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;
+
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+
+    transition: transform 0.2s, box-shadow 0.2s;
+
+    cursor: none;
+
+  }
+
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,229,160,0.3); }
+
+  .btn-ghost {
+
+    background: transparent; color: var(--text);
+
+    border: 1px solid var(--muted); padding: 14px 32px;
+
+    font-family: 'Syne', sans-serif; font-weight: 600;
+
+    font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase;
+
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+
+    transition: border-color 0.2s, color 0.2s;
+
+    cursor: none;
+
+  }
+
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+
+  .hero-stats {
+
+    position: absolute; right: 60px; bottom: 60px;
+
+    display: flex; gap: 40px;
+
+    animation: fadeSlideUp 0.8s 0.5s ease both;
+
+  }
+
+  .stat { text-align: right; }
+
+  .stat-num {
+
+    font-size: 2.5rem; font-weight: 800; color: var(--accent);
+
+    line-height: 1;
+
+  }
+
+  .stat-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+
+
+  @keyframes fadeSlideUp {
+
+    from { opacity: 0; transform: translateY(30px); }
+
+    to { opacity: 1; transform: translateY(0); }
+
+  }
+
+
+  /* SECTIONS */
+
+  section { padding: 100px 60px; }
+
+  .section-label {
+
+    font-family: 'DM Mono', monospace; font-size: 0.75rem;
+
+    color: var(--accent); letter-spacing: 0.2em; text-transform: uppercase;
+
+    margin-bottom: 16px;
+
+    display: flex; align-items: center; gap: 12px;
+
+  }
+
+  .section-label::after {
+
+    content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--accent); opacity: 0.4;
+
+  }
+
+  .section-title {
+
+    font-size: clamp(2rem, 5vw, 4rem);
+
+    font-weight: 800; line-height: 1.05;
+
+    letter-spacing: -0.02em; margin-bottom: 60px;
+
+  }
+
+
+  /* EXPERIENCE */
+
+  #experience { background: var(--surface); position: relative; }
+
+  #experience::before {
+
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+
+    background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+
+  }
+
+
+  .timeline { position: relative; max-width: 800px; }
+
+  .timeline-item {
+
+    display: grid; grid-template-columns: 160px 1fr;
+
+    gap: 32px; margin-bottom: 48px;
+
+    opacity: 0; transform: translateX(-20px);
+
+    transition: opacity 0.6s ease, transform 0.6s ease;
+
+  }
+
+  .timeline-item.visible { opacity: 1; transform: translateX(0); }
+
+  .timeline-date {
+
+    font-family: 'DM Mono', monospace; font-size: 0.75rem;
+
+    color: var(--text-dim); letter-spacing: 0.05em; line-height: 1.6;
+
+    padding-top: 4px;
+
+  }
+
+  .timeline-company {
+
+    font-size: 0.8rem; color: var(--accent); font-family: 'DM Mono', monospace;
+
+    margin-top: 4px;
+
+  }
+
+  .timeline-body { position: relative; padding-left: 24px; }
+
+  .timeline-body::before {
+
+    content: ''; position: absolute; left: 0; top: 8px;
+
+    width: 8px; height: 8px; border-radius: 50%;
+
+    background: var(--accent); box-shadow: 0 0 12px var(--accent);
+
+  }
+
+  .timeline-body::after {
+
+    content: ''; position: absolute; left: 3px; top: 20px; bottom: -48px;
+
+    width: 1px; background: linear-gradient(to bottom, var(--accent)40, transparent);
+
+  }
+
+  .timeline-role { font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+
+  .timeline-desc { font-family: 'DM Mono', monospace; font-size: 0.82rem; color: var(--text-dim); line-height: 1.7; }
+
+
+  /* SKILLS */
+
+  #skills { background: var(--bg); }
+
+  .skills-grid {
+
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+
+    gap: 12px; max-width: 900px;
+
+  }
+
+  .skill-chip {
+
+    background: var(--card); border: 1px solid rgba(255,255,255,0.05);
+
+    padding: 12px 16px; font-family: 'DM Mono', monospace;
+
+    font-size: 0.82rem; color: var(--text);
+
+    text-align: center; letter-spacing: 0.03em;
+
+    transition: border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
+
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+
+    opacity: 0; transform: scale(0.9);
+
+    transition: opacity 0.4s, transform 0.4s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+
+  }
+
+  .skill-chip.visible { opacity: 1; transform: scale(1); }
+
+  .skill-chip:hover {
+
+    border-color: var(--accent); color: var(--accent);
+
+    box-shadow: 0 0 16px rgba(0,229,160,0.15); transform: scale(1.05);
+
+  }
+
+
+  /* PROJECTS */
+
+  #projects { background: var(--surface); }
+
+  .projects-grid {
+
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+
+    gap: 24px;
+
+  }
+
+  .project-card {
+
+    background: var(--card); border: 1px solid rgba(255,255,255,0.05);
+
+    padding: 32px; position: relative; overflow: hidden;
+
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+
+    opacity: 0; transform: translateY(30px);
+
+    transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.2s, box-shadow 0.2s;
+
+  }
+
+  .project-card.visible { opacity: 1; transform: translateY(0); }
+
+  .project-card::before {
+
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+
+    transform: scaleX(0); transform-origin: left;
+
+    transition: transform 0.3s ease;
+
+  }
+
+  .project-card:hover { border-color: rgba(0,229,160,0.2); box-shadow: 0 8px 40px rgba(0,0,0,0.4); }
+
+  .project-card:hover::before { transform: scaleX(1); }
+
+  .project-num {
+
+    font-family: 'DM Mono', monospace; font-size: 0.7rem;
+
+    color: var(--accent); letter-spacing: 0.15em; margin-bottom: 16px;
+
+  }
+
+  .project-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; }
+
+  .project-desc {
+
+    font-family: 'DM Mono', monospace; font-size: 0.8rem;
+
+    color: var(--text-dim); line-height: 1.7; margin-bottom: 20px;
+
+  }
+
+  .project-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+
+  .tag {
+
+    background: rgba(0,229,160,0.06); border: 1px solid rgba(0,229,160,0.15);
+
+    color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.68rem;
+
+    padding: 4px 10px; letter-spacing: 0.05em;
+
+  }
+
+  .project-link {
+
+    font-family: 'DM Mono', monospace; font-size: 0.78rem;
+
+    color: var(--text-dim); text-decoration: none;
+
+    display: inline-flex; align-items: center; gap: 8px;
+
+    transition: color 0.2s;
+
+  }
+
+  .project-link:hover { color: var(--accent); }
+
+  .project-link span { font-size: 1rem; }
+
+
+  /* CONTACT */
+
+  #contact { background: var(--bg); }
+
+  .contact-grid {
+
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; max-width: 900px;
+
+  }
+
+  .contact-text { font-family: 'DM Mono', monospace; font-size: 0.9rem; color: var(--text-dim); line-height: 1.8; }
+
+  .contact-links { display: flex; flex-direction: column; gap: 20px; }
+
+  .contact-item {
+
+    display: flex; align-items: center; gap: 16px;
+
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+
+    padding-bottom: 20px; text-decoration: none; color: var(--text);
+
+    transition: color 0.2s; cursor: none;
+
+  }
+
+  .contact-item:hover { color: var(--accent); }
+
+  .contact-icon {
+
+    width: 40px; height: 40px; background: var(--card);
+
+    display: flex; align-items: center; justify-content: center;
+
+    font-size: 1.1rem; flex-shrink: 0;
+
+    border: 1px solid rgba(255,255,255,0.05);
+
+  }
+
+  .contact-item-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; }
+
+  .contact-item-value { font-size: 0.9rem; font-weight: 600; }
+
+
+  /* FOOTER */
+
+  footer {
+
+    border-top: 1px solid rgba(255,255,255,0.05);
+
+    padding: 32px 60px;
+
+    display: flex; justify-content: space-between; align-items: center;
+
+    font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted);
+
+  }
+
+
+  /* SCROLLBAR */
+
+  ::-webkit-scrollbar { width: 4px; }
+
+  ::-webkit-scrollbar-track { background: var(--bg); }
+
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+
+  /* EDUCATION */
+
+  #education { background: var(--surface); }
+
+  .edu-card {
+
+    background: var(--card); border: 1px solid rgba(255,255,255,0.05);
+
+    padding: 32px; max-width: 500px;
+
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+
+    position: relative;
+
+  }
+
+  .edu-degree { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+
+  .edu-uni { font-size: 1rem; font-weight: 600; margin: 8px 0 4px; }
+
+  .edu-meta { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--text-dim); }
+
+
+  @media (max-width: 768px) {
+
+    nav { padding: 20px 24px; }
+
+    .nav-links { display: none; }
+
+    section { padding: 80px 24px; }
+
+    #hero { padding: 100px 24px 80px; }
+
+    .hero-stats { display: none; }
+
+    .timeline-item { grid-template-columns: 1fr; gap: 8px; }
+
+    .contact-grid { grid-template-columns: 1fr; }
+
+    footer { padding: 24px; flex-direction: column; gap: 8px; text-align: center; }
+
+  }
+
+</style>
+
 </head>
+
 <body>
 
-    <h1>This is a Heading</h1>
-    <p>This is a paragraph.</p>
+
+<div class="cursor" id="cursor"></div>
+
+<div class="cursor-ring" id="cursorRing"></div>
+
+
+<!-- NAV -->
+
+<nav>
+
+  <div class="nav-logo">JK</div>
+
+  <ul class="nav-links">
+
+    <li><a href="#experience">Experience</a></li>
+
+    <li><a href="#skills">Skills</a></li>
+
+    <li><a href="#projects">Projects</a></li>
+
+    <li><a href="#contact">Contact</a></li>
+
+  </ul>
+
+</nav>
+
+
+<!-- HERO -->
+
+<section id="hero">
+
+  <div class="hero-grid"></div>
+
+  <div class="hero-glow"></div>
+
+  <div class="hero-glow2"></div>
+
+  <div class="hero-content">
+
+    <div class="hero-tag">Available for opportunities</div>
+
+    <h1 class="hero-name">
+
+      Jitendra<span>Kumar</span>
+
+    </h1>
+
+    <p class="hero-sub">
+
+      Android Developer crafting high-performance mobile experiences with Kotlin, Jetpack Compose &amp; MVVM. 7+ years building apps used by millions.
+
+    </p>
+
+    <div class="hero-actions">
+
+      <a href="#projects" class="btn-primary">View Projects ↓</a>
+
+      <a href="#contact" class="btn-ghost">Get in Touch</a>
+
+    </div>
+
+  </div>
+
+  <div class="hero-stats">
+
+    <div class="stat">
+
+      <div class="stat-num">7+</div>
+
+      <div class="stat-label">Years Exp</div>
+
+    </div>
+
+    <div class="stat">
+
+      <div class="stat-num">5</div>
+
+      <div class="stat-label">Companies</div>
+
+    </div>
+
+    <div class="stat">
+
+      <div class="stat-num">3+</div>
+
+      <div class="stat-label">Apps Live</div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- EXPERIENCE -->
+
+<section id="experience">
+
+  <div class="section-label">Career</div>
+
+  <h2 class="section-title">Work Experience</h2>
+
+  <div class="timeline">
+
+
+    <div class="timeline-item">
+
+      <div class="timeline-date">
+
+        05/2025 — Present
+
+        <div class="timeline-company">India Today</div>
+
+      </div>
+
+      <div class="timeline-body">
+
+        <div class="timeline-role">Android Developer</div>
+
+        <div class="timeline-desc">IT Combine (India Today) — Noida, UP<br>Working at India's leading media company delivering mobile experiences to millions of readers and viewers.</div>
+
+      </div>
+
+    </div>
+
+
+    <div class="timeline-item">
+
+      <div class="timeline-date">
+
+        05/2024 — 02/2025
+
+        <div class="timeline-company">Techmatrix</div>
+
+      </div>
+
+      <div class="timeline-body">
+
+        <div class="timeline-role">Sr. Software Engineer</div>
+
+        <div class="timeline-desc">Techmatrix Consulting Pvt. Ltd — Noida, UP<br>Collaborated with development team to ensure high performance and responsiveness of applications.</div>
+
+      </div>
+
+    </div>
+
+
+    <div class="timeline-item">
+
+      <div class="timeline-date">
+
+        03/2022 — 01/2024
+
+        <div class="timeline-company">Convergent Tech</div>
+
+      </div>
+
+      <div class="timeline-body">
+
+        <div class="timeline-role">Software Engineer</div>
+
+        <div class="timeline-desc">CT Software Solutions — Gurugram, Haryana<br>Analyzed user requirements, designed mobile apps, debugged and troubleshot application issues.</div>
+
+      </div>
+
+    </div>
+
+
+    <div class="timeline-item">
+
+      <div class="timeline-date">
+
+        02/2020 — 03/2022
+
+        <div class="timeline-company">Neepanlok</div>
+
+      </div>
+
+      <div class="timeline-body">
+
+        <div class="timeline-role">Android Developer</div>
+
+        <div class="timeline-desc">Neepanlok Info-tech Pvt. Ltd. — Faridabad, Haryana<br>Developed efficient and reliable code using Java, XML, and Android Studio.</div>
+
+      </div>
+
+    </div>
+
+
+    <div class="timeline-item">
+
+      <div class="timeline-date">
+
+        07/2018 — 02/2020
+
+        <div class="timeline-company">Isipho Tech</div>
+
+      </div>
+
+      <div class="timeline-body">
+
+        <div class="timeline-role">Android Developer</div>
+
+        <div class="timeline-desc">Isipho Technologies Pvt. Ltd. — Hyderabad, Telangana<br>UI development, version control management, debugging &amp; troubleshooting.</div>
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+<!-- SKILLS -->
+
+<section id="skills">
+
+  <div class="section-label">Tech Stack</div>
+
+  <h2 class="section-title">Skills &amp; Tools</h2>
+
+  <div class="skills-grid" id="skillsGrid">
+
+    <!-- skills injected by JS -->
+
+  </div>
+
+</section>
+
+
+<!-- PROJECTS -->
+
+<section id="projects">
+
+  <div class="section-label">Portfolio</div>
+
+  <h2 class="section-title">Featured Projects</h2>
+
+  <div class="projects-grid">
+
+
+    <div class="project-card">
+
+      <div class="project-num">01 / PROJECT</div>
+
+      <div class="project-name">SBOSS Assist App</div>
+
+      <div class="project-desc">Built for Field Operations Support (FOS), offering full functionality in both online and offline modes. Records user location every 30 minutes with AES-256 encryption.</div>
+
+      <div class="project-tags">
+
+        <span class="tag">Kotlin</span>
+
+        <span class="tag">MVVM</span>
+
+        <span class="tag">Work Manager</span>
+
+        <span class="tag">Room DB</span>
+
+        <span class="tag">Retrofit</span>
+
+        <span class="tag">Salesforce SDK</span>
+
+        <span class="tag">Encryption</span>
+
+        <span class="tag">ProGuard</span>
+
+      </div>
+
+    </div>
+
+
+    <div class="project-card">
+
+      <div class="project-num">02 / PROJECT</div>
+
+      <div class="project-name">Fit India Mobile App</div>
+
+      <div class="project-desc">Government fitness app assessing user health parameters with personalized improvement suggestions using real-time data visualization and Google Fit API integration.</div>
+
+      <div class="project-tags">
+
+        <span class="tag">Kotlin</span>
+
+        <span class="tag">MVC</span>
+
+        <span class="tag">SQLite DB</span>
+
+        <span class="tag">MP Chart</span>
+
+        <span class="tag">YouTube API</span>
+
+        <span class="tag">Google Fit</span>
+
+        <span class="tag">Data Binding</span>
+
+      </div>
+
+      <a href="https://play.google.com/store/apps/details?id=com.sai.fitIndia&hl=en" target="_blank" class="project-link"><span>↗</span> View on Play Store</a>
+
+    </div>
+
+
+    <div class="project-card">
+
+      <div class="project-num">03 / PROJECT</div>
+
+      <div class="project-name">NextClick — Grocery &amp; Food</div>
+
+      <div class="project-desc">One-stop online shop for groceries, food, electronics, clothing &amp; home services. Delivers from nearest vendors in 10 minutes with no hidden charges.</div>
+
+      <div class="project-tags">
+
+        <span class="tag">Java</span>
+
+        <span class="tag">SQLite DB</span>
+
+        <span class="tag">MVC</span>
+
+        <span class="tag">Volley</span>
+
+        <span class="tag">Firebase</span>
+
+        <span class="tag">Async Task</span>
+
+        <span class="tag">UI/UX</span>
+
+      </div>
+
+      <a href="https://play.google.com/store/apps/details?id=com.nextclick.user&hl=en" target="_blank" class="project-link"><span>↗</span> View on Play Store</a>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+<!-- EDUCATION -->
+
+<section id="education">
+
+  <div class="section-label">Academic</div>
+
+  <h2 class="section-title">Education</h2>
+
+  <div class="edu-card">
+
+    <div class="edu-degree">BCA</div>
+
+    <div class="edu-uni">MJPR University, Bareilly</div>
+
+    <div class="edu-meta">Bachelor of Computer Applications · 2013 — 2016 · Uttar Pradesh, India</div>
+
+  </div>
+
+</section>
+
+
+<!-- CONTACT -->
+
+<section id="contact">
+
+  <div class="section-label">Let's Talk</div>
+
+  <h2 class="section-title">Get in Touch</h2>
+
+  <div class="contact-grid">
+
+    <div class="contact-text">
+
+      Open to new opportunities, collaborations, and interesting Android projects. Feel free to reach out via email or connect on LinkedIn.
+
+      <br><br>
+
+      Based in Noida, Uttar Pradesh, India. Available for remote and on-site roles.
+
+    </div>
+
+    <div class="contact-links">
+
+      <a href="mailto:jitendra.neepanlok@gmail.com" class="contact-item">
+
+        <div class="contact-icon">✉</div>
+
+        <div>
+
+          <div class="contact-item-label">Email</div>
+
+          <div class="contact-item-value">jitendra.neepanlok@gmail.com</div>
+
+        </div>
+
+      </a>
+
+      <a href="tel:+919389987526" class="contact-item">
+
+        <div class="contact-icon">📱</div>
+
+        <div>
+
+          <div class="contact-item-label">Phone</div>
+
+          <div class="contact-item-value">+91 93899 87526</div>
+
+        </div>
+
+      </a>
+
+      <a href="https://linkedin.com/in/jitendra-kumar-183446130" target="_blank" class="contact-item">
+
+        <div class="contact-icon">in</div>
+
+        <div>
+
+          <div class="contact-item-label">LinkedIn</div>
+
+          <div class="contact-item-value">jitendra-kumar-183446130</div>
+
+        </div>
+
+      </a>
+
+      <a href="https://github.com/Jitendraneepanlok" target="_blank" class="contact-item">
+
+        <div class="contact-icon">⌥</div>
+
+        <div>
+
+          <div class="contact-item-label">GitHub</div>
+
+          <div class="contact-item-value">Jitendraneepanlok</div>
+
+        </div>
+
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+  <span>© 2025 Jitendra Kumar</span>
+
+  <span>Android Developer · Noida, India</span>
+
+</footer>
+
+
+<script>
+
+  // Custom cursor
+
+  const cursor = document.getElementById('cursor');
+
+  const ring = document.getElementById('cursorRing');
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  function animateCursor() {
+
+    cursor.style.transform = `translate(${mx - 6}px, ${my - 6}px)`;
+
+    rx += (mx - rx) * 0.12;
+
+    ry += (my - ry) * 0.12;
+
+    ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
+
+    requestAnimationFrame(animateCursor);
+
+  }
+
+  animateCursor();
+
+
+  // Skills
+
+  const skills = ['Java / Kotlin','Jetpack Compose','Android SDK','MVVM & MVC','Retrofit','Firebase','Room DB','Coroutines','Dagger & Hilt','LiveData','Work Manager','JSON Parsing','SQLite','Figma / UI·UX','Git & Bitbucket','ProGuard','JUnit','Google APIs','Third-party SDKs','Jira'];
+
+  const grid = document.getElementById('skillsGrid');
+
+  skills.forEach((s, i) => {
+
+    const el = document.createElement('div');
+
+    el.className = 'skill-chip';
+
+    el.textContent = s;
+
+    el.style.transitionDelay = `${i * 0.04}s`;
+
+    grid.appendChild(el);
+
+  });
+
+
+  // Intersection Observer
+
+  const observer = new IntersectionObserver((entries) => {
+
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+
+  }, { threshold: 0.1 });
+
+
+  document.querySelectorAll('.timeline-item, .project-card, .skill-chip').forEach(el => observer.observe(el));
+
+</script>
 
 </body>
+
 </html>
+
